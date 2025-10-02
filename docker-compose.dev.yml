@@ -6,7 +6,7 @@ services:
     image: neondatabase/neon_local:latest
     container_name: acquisition-neon-local
     ports:
-      - "5432:5432"
+      - '5432:5432'
     env_file:
       - .env.development
     volumes:
@@ -15,7 +15,7 @@ services:
       - ./.git/HEAD:/tmp/.git/HEAD:ro
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "5432"]
+      test: ['CMD', 'nc', '-z', 'localhost', '5432']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,7 +28,7 @@ services:
       dockerfile: Dockerfile
     container_name: acquisition-app-dev
     ports:
-      - "3000:3000"
+      - '3000:3000'
     env_file:
       - .env.development
     volumes:
@@ -39,7 +39,7 @@ services:
       neon-local:
         condition: service_healthy
     restart: unless-stopped
-    command: ["node", "--watch", "src/index.js"]
+    command: ['node', '--watch', 'src/index.js']
 
 networks:
   default:

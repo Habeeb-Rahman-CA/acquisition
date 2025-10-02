@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "imports": {
-    "#src/*":"./src/*",
+    "#src/*": "./src/*",
     "#config/*": "./src/config/*",
     "#controller/*": "./src/controller/*",
     "#middleware/*": "./src/middleware/*",

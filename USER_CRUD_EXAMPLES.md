@@ -7,6 +7,7 @@ This document provides examples of how to use the new User CRUD operations imple
 For `PUT` and `DELETE` operations, you need to be authenticated. First, sign up or sign in to get an authentication cookie:
 
 ### Sign Up
+
 ```bash
 curl -X POST http://localhost:3000/auth/sign-up \
   -H "Content-Type: application/json" \
@@ -20,6 +21,7 @@ curl -X POST http://localhost:3000/auth/sign-up \
 ```
 
 ### Sign In
+
 ```bash
 curl -X POST http://localhost:3000/auth/sign-in \
   -H "Content-Type: application/json" \
@@ -33,11 +35,13 @@ curl -X POST http://localhost:3000/auth/sign-in \
 ## User CRUD Operations
 
 ### 1. Get All Users
+
 ```bash
 curl -X GET http://localhost:3000/users
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Successfully retrieved users",
@@ -56,11 +60,13 @@ curl -X GET http://localhost:3000/users
 ```
 
 ### 2. Get User by ID
+
 ```bash
 curl -X GET http://localhost:3000/users/1
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Successfully retrieved user",
@@ -76,6 +82,7 @@ curl -X GET http://localhost:3000/users/1
 ```
 
 **Error Cases:**
+
 ```bash
 # Invalid ID format
 curl -X GET http://localhost:3000/users/abc
@@ -89,6 +96,7 @@ curl -X GET http://localhost:3000/users/999
 ### 3. Update User (Authentication Required)
 
 #### Update Own Profile
+
 ```bash
 curl -X PUT http://localhost:3000/users/1 \
   -H "Content-Type: application/json" \
@@ -100,6 +108,7 @@ curl -X PUT http://localhost:3000/users/1 \
 ```
 
 #### Update Password
+
 ```bash
 curl -X PUT http://localhost:3000/users/1 \
   -H "Content-Type: application/json" \
@@ -110,6 +119,7 @@ curl -X PUT http://localhost:3000/users/1 \
 ```
 
 #### Admin Updates User Role (Admin Only)
+
 ```bash
 curl -X PUT http://localhost:3000/users/1 \
   -H "Content-Type: application/json" \
@@ -120,6 +130,7 @@ curl -X PUT http://localhost:3000/users/1 \
 ```
 
 **Response:**
+
 ```json
 {
   "message": "User updated successfully",
@@ -135,6 +146,7 @@ curl -X PUT http://localhost:3000/users/1 \
 ```
 
 **Error Cases:**
+
 ```bash
 # No authentication
 curl -X PUT http://localhost:3000/users/1 \
@@ -174,18 +186,21 @@ curl -X PUT http://localhost:3000/users/1 \
 ### 4. Delete User (Authentication Required)
 
 #### Delete Own Profile
+
 ```bash
 curl -X DELETE http://localhost:3000/users/1 \
   -b cookies.txt
 ```
 
 #### Admin Deletes User
+
 ```bash
 curl -X DELETE http://localhost:3000/users/2 \
   -b admin_cookies.txt
 ```
 
 **Response:**
+
 ```json
 {
   "message": "User deleted successfully",
@@ -199,6 +214,7 @@ curl -X DELETE http://localhost:3000/users/2 \
 ```
 
 **Error Cases:**
+
 ```bash
 # No authentication
 curl -X DELETE http://localhost:3000/users/1
@@ -223,12 +239,14 @@ curl -X DELETE http://localhost:3000/users/999 \
 ## Business Rules Implemented
 
 ### Authorization Rules:
+
 1. **Update User**: Users can only update their own profile, admins can update any user
 2. **Role Changes**: Only admins can change user roles
 3. **Delete User**: Users can delete their own profile, admins can delete any user
 4. **Last Admin Protection**: The last admin in the system cannot be deleted
 
 ### Validation Rules:
+
 1. **ID Validation**: Must be a positive integer
 2. **Email Validation**: Must be valid email format
 3. **Password Validation**: Minimum 6 characters, maximum 128 characters
@@ -237,6 +255,7 @@ curl -X DELETE http://localhost:3000/users/999 \
 6. **Update Requirement**: At least one field must be provided for updates
 
 ### Security Features:
+
 1. **JWT Authentication**: Required for update and delete operations
 2. **Password Hashing**: Passwords are automatically hashed before storage
 3. **Input Sanitization**: All inputs are validated and sanitized

@@ -1,9 +1,11 @@
 # Warp Development Guide - Acquisition Project
 
 ## Project Overview
+
 This is the **Acquisition** project - a Node.js/Express.js application with modern tooling and database integration.
 
 ### Tech Stack
+
 - **Runtime**: Node.js (ES Modules)
 - **Framework**: Express.js v5.1.0
 - **Database**: Neon Database with Drizzle ORM
@@ -16,6 +18,7 @@ This is the **Acquisition** project - a Node.js/Express.js application with mode
 ## Quick Start Commands
 
 ### Development
+
 ```bash
 # Start development server with hot reload
 npm run dev
@@ -25,6 +28,7 @@ npm run db:studio
 ```
 
 ### Database Operations
+
 ```bash
 # Generate database migrations
 npm run db:generate
@@ -37,6 +41,7 @@ npm run db:studio
 ```
 
 ### Code Quality
+
 ```bash
 # Lint code
 npm run lint
@@ -73,6 +78,7 @@ acquisition/
 ```
 
 ## Path Imports
+
 This project uses custom import paths for cleaner imports:
 
 ```javascript
@@ -88,6 +94,7 @@ import { userSchema } from '#validation/userSchema.js';
 ## Environment Setup
 
 Create a `.env` file with the following variables:
+
 ```env
 PORT=3000
 DATABASE_URL=your_neon_database_url
@@ -98,13 +105,17 @@ NODE_ENV=development
 ## Development Workflow
 
 ### 1. Starting Development
+
 ```bash
 npm run dev
 ```
+
 This starts the server with `--watch` flag for automatic restarts on file changes.
 
 ### 2. Database Changes
+
 When making database schema changes:
+
 ```bash
 # 1. Update your schema files in src/models/
 # 2. Generate migration
@@ -115,7 +126,9 @@ npm run db:migrate
 ```
 
 ### 3. Code Quality Checks
+
 Before committing:
+
 ```bash
 npm run lint:fix
 npm run format
@@ -124,16 +137,19 @@ npm run format
 ## Useful Warp Features
 
 ### Terminal Shortcuts
+
 - `Ctrl + Shift + T` - New terminal tab
 - `Ctrl + Shift + D` - Split terminal
 - `Ctrl + Shift + W` - Close current tab
 
 ### AI Assistant Commands
+
 - Ask Warp AI about debugging: "Why is my Express server not starting?"
 - Get help with database queries: "How do I write a Drizzle query for..."
 - Code reviews: "Review this API endpoint for security issues"
 
 ### Git Integration
+
 ```bash
 # Quick status check
 git status
@@ -149,6 +165,7 @@ git push origin main
 ## Common Issues & Solutions
 
 ### Database Connection Issues
+
 ```bash
 # Check if DATABASE_URL is set
 echo $env:DATABASE_URL  # PowerShell
@@ -159,6 +176,7 @@ npm run db:studio
 ```
 
 ### Port Already in Use
+
 ```bash
 # Find process using port 3000
 netstat -ano | findstr :3000
@@ -168,6 +186,7 @@ taskkill /PID <PID> /F
 ```
 
 ### ESLint/Prettier Conflicts
+
 ```bash
 # Fix all linting and formatting issues
 npm run lint:fix && npm run format
@@ -192,4 +211,4 @@ npm run lint:fix && npm run format
 
 ---
 
-*Happy coding with Warp! 🚀*
+_Happy coding with Warp! 🚀_

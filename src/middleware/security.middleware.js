@@ -39,12 +39,10 @@ export const securityMiddleware = async (req, res, next) => {
         userAgent: req.get('User-Agent'),
         path: req.path,
       });
-      return res
-        .status(403)
-        .json({
-          error: 'Forbidden',
-          message: 'Automated request are not allowed ',
-        });
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: 'Automated request are not allowed ',
+      });
     }
     if (decision.isDenied() && decision.reason.isShield()) {
       logger.warn('Shield blocked', {
@@ -53,12 +51,10 @@ export const securityMiddleware = async (req, res, next) => {
         path: req.path,
         method: req.method,
       });
-      return res
-        .status(403)
-        .json({
-          error: 'Forbidden',
-          message: 'Request block by security policy',
-        });
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: 'Request block by security policy',
+      });
     }
     if (decision.isDenied() && decision.reason.isRateLimit()) {
       logger.warn('Rate limit exceeded', {

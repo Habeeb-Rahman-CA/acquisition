@@ -6,31 +6,37 @@ import { hashPassword } from '#services/auth.service.js';
 
 export const getAllUsers = async () => {
   try {
-    return await db.select({
+    return await db
+      .select({
         id: users.id,
         email: users.email,
         name: users.name,
         role: users.role,
         created_at: users.created_at,
-        updated_at: users.updated_at
-    }).from(users);
+        updated_at: users.updated_at,
+      })
+      .from(users);
   } catch (e) {
     logger.error(e);
     throw e;
   }
 };
 
-export const getUserById = async (id) => {
+export const getUserById = async id => {
   try {
-    const [user] = await db.select({
+    const [user] = await db
+      .select({
         id: users.id,
         email: users.email,
         name: users.name,
         role: users.role,
         created_at: users.created_at,
-        updated_at: users.updated_at
-    }).from(users).where(eq(users.id, id)).limit(1);
-    
+        updated_at: users.updated_at,
+      })
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1);
+
     return user;
   } catch (e) {
     logger.error(`Error fetching user by ID ${id}:`, e);
@@ -48,12 +54,12 @@ export const updateUser = async (id, updates) => {
 
     // Prepare updates object
     const updateData = { ...updates };
-    
+
     // Hash password if it's being updated
     if (updates.password) {
       updateData.password = await hashPassword(updates.password);
     }
-    
+
     // Add updated timestamp
     updateData.updated_at = new Date();
 
@@ -67,7 +73,7 @@ export const updateUser = async (id, updates) => {
         name: users.name,
         role: users.role,
         created_at: users.created_at,
-        updated_at: users.updated_at
+        updated_at: users.updated_at,
       });
 
     logger.info(`User ${updatedUser.email} updated successfully`);
@@ -78,7 +84,7 @@ export const updateUser = async (id, updates) => {
   }
 };
 
-export const deleteUser = async (id) => {
+export const deleteUser = async id => {
   try {
     // Check if user exists
     const existingUser = await getUserById(id);
@@ -93,7 +99,7 @@ export const deleteUser = async (id) => {
         id: users.id,
         email: users.email,
         name: users.name,
-        role: users.role
+        role: users.role,
       });
 
     logger.info(`User ${deletedUser.email} deleted successfully`);

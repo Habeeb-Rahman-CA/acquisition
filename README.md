@@ -1,6 +1,7 @@
 # Acquisition - Dockerized Node.js Application with Neon Database
 
 This application is configured to work with different database setups for development and production:
+
 - **Development**: Uses Neon Local proxy for ephemeral database branches
 - **Production**: Uses Neon Cloud database directly
 
@@ -33,15 +34,17 @@ Your App ← Internet → Neon Cloud (Direct)
 ### 1. Configure Environment Variables
 
 Copy the development environment template:
+
 ```bash
 cp .env.development .env.dev
 ```
 
 Edit `.env.dev` and replace the placeholder values:
+
 ```bash
 # Required: Replace these with your actual Neon credentials
 NEON_API_KEY=your_actual_neon_api_key_here
-NEON_PROJECT_ID=your_actual_project_id_here  
+NEON_PROJECT_ID=your_actual_project_id_here
 PARENT_BRANCH_ID=your_parent_branch_id_here
 
 # Optional: Update your Arcjet key if needed
@@ -51,11 +54,13 @@ ARCJET_KEY=your_arcjet_key
 ### 2. Start Development Environment
 
 Run the application with Neon Local:
+
 ```bash
 docker-compose --env-file .env.dev -f docker-compose.dev.yml up -d
 ```
 
 This will:
+
 - Start Neon Local proxy container
 - Create an ephemeral database branch (automatically deleted when stopped)
 - Start your application container
@@ -64,11 +69,13 @@ This will:
 ### 3. Verify Setup
 
 Check that everything is running:
+
 ```bash
 docker-compose -f docker-compose.dev.yml ps
 ```
 
 View logs:
+
 ```bash
 docker-compose -f docker-compose.dev.yml logs -f
 ```
@@ -78,11 +85,13 @@ Your application will be available at: http://localhost:3000
 ### 4. Database Operations
 
 Run database migrations:
+
 ```bash
 docker-compose -f docker-compose.dev.yml exec app npm run db:migrate
 ```
 
 Open Drizzle Studio:
+
 ```bash
 docker-compose -f docker-compose.dev.yml exec app npm run db:studio
 ```
@@ -100,11 +109,13 @@ Note: This will automatically delete the ephemeral database branch.
 ### 1. Configure Environment Variables
 
 Create production environment file:
+
 ```bash
 cp .env.production .env.prod
 ```
 
 Set your production environment variables (typically done in your deployment platform):
+
 ```bash
 export DATABASE_URL="your_production_neon_cloud_url"
 export ARCJET_KEY="your_production_arcjet_key"
@@ -113,11 +124,13 @@ export ARCJET_KEY="your_production_arcjet_key"
 ### 2. Deploy to Production
 
 Using Docker Compose:
+
 ```bash
 docker-compose --env-file .env.prod -f docker-compose.prod.yml up -d
 ```
 
 Or build and run manually:
+
 ```bash
 # Build the image
 docker build -t acquisition-app .
@@ -135,6 +148,7 @@ docker run -d \
 ## Docker Commands Reference
 
 ### Development Commands
+
 ```bash
 # Start development environment
 docker-compose --env-file .env.dev -f docker-compose.dev.yml up -d
@@ -156,6 +170,7 @@ docker-compose -f docker-compose.dev.yml down
 ```
 
 ### Production Commands
+
 ```bash
 # Start production environment
 docker-compose --env-file .env.prod -f docker-compose.prod.yml up -d
@@ -173,38 +188,44 @@ docker-compose -f docker-compose.prod.yml down
 ## Environment Variables Reference
 
 ### Development (.env.dev)
-| Variable | Description | Required | Example |
-|----------|-------------|----------|---------|
-| `NEON_API_KEY` | Your Neon API key | Yes | `neon_api_key_...` |
-| `NEON_PROJECT_ID` | Your Neon project ID | Yes | `cool-project-123` |
-| `PARENT_BRANCH_ID` | Parent branch for ephemeral branches | Yes | `br-branch-123` |
-| `ARCJET_KEY` | Arcjet security key | Yes | `ajkey_...` |
+
+| Variable           | Description                          | Required | Example            |
+| ------------------ | ------------------------------------ | -------- | ------------------ |
+| `NEON_API_KEY`     | Your Neon API key                    | Yes      | `neon_api_key_...` |
+| `NEON_PROJECT_ID`  | Your Neon project ID                 | Yes      | `cool-project-123` |
+| `PARENT_BRANCH_ID` | Parent branch for ephemeral branches | Yes      | `br-branch-123`    |
+| `ARCJET_KEY`       | Arcjet security key                  | Yes      | `ajkey_...`        |
 
 ### Production (.env.prod or environment variables)
-| Variable | Description | Required | Example |
-|----------|-------------|----------|---------|
-| `DATABASE_URL` | Full Neon Cloud connection string | Yes | `postgres://user:pass@host.neon.tech/db` |
-| `ARCJET_KEY` | Arcjet security key | Yes | `ajkey_...` |
+
+| Variable       | Description                       | Required | Example                                  |
+| -------------- | --------------------------------- | -------- | ---------------------------------------- |
+| `DATABASE_URL` | Full Neon Cloud connection string | Yes      | `postgres://user:pass@host.neon.tech/db` |
+| `ARCJET_KEY`   | Arcjet security key               | Yes      | `ajkey_...`                              |
 
 ## Troubleshooting
 
 ### Common Issues
 
 **1. Neon Local fails to start**
+
 - Check your API key and project ID are correct
 - Ensure your Neon account has access to the project
 - Verify the parent branch ID exists
 
 **2. Application can't connect to database**
+
 - Check that the `neon-local` service is healthy: `docker-compose -f docker-compose.dev.yml ps`
 - Verify the database URL format in your environment file
 - Check the container logs: `docker-compose -f docker-compose.dev.yml logs neon-local`
 
 **3. Hot-reload not working in development**
+
 - Ensure source code is properly mounted as a volume
 - Check that `--watch` flag is being used in the development command
 
 **4. Production deployment issues**
+
 - Verify `DATABASE_URL` points to your actual Neon Cloud database
 - Check that all required environment variables are set
 - Ensure your Neon database accepts connections from your production environment
@@ -212,16 +233,19 @@ docker-compose -f docker-compose.prod.yml down
 ### Useful Commands
 
 Check container health:
+
 ```bash
 docker inspect acquisition-neon-local | grep -A 10 "Health"
 ```
 
 Connect directly to Neon Local:
+
 ```bash
 docker exec -it acquisition-neon-local psql postgres://neon:npg@localhost:5432/neondb
 ```
 
 View detailed container logs:
+
 ```bash
 docker logs acquisition-app-dev --follow
 ```
@@ -242,6 +266,7 @@ docker logs acquisition-app-dev --follow
 ## Support
 
 For issues related to:
+
 - Neon Local: Check [Neon Documentation](https://neon.com/docs/local/neon-local)
 - Docker setup: Review the compose files and this documentation
 - Application issues: Check application logs and verify environment configuration

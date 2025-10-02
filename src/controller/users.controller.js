@@ -1,6 +1,14 @@
 import logger from '#config/logger.js';
-import { getAllUsers, getUserById, updateUser, deleteUser } from '#services/users.service.js';
-import { userIdSchema, updateUserSchema } from '#validation/users.validation.js';
+import {
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+} from '#services/users.service.js';
+import {
+  userIdSchema,
+  updateUserSchema,
+} from '#validation/users.validation.js';
 import { formatValidationError } from '#utils/format.js';
 
 export const fetchAllUsers = async (req, res, next) => {
@@ -34,20 +42,20 @@ export const fetchUserById = async (req, res, next) => {
     logger.info(`Getting user by ID: ${id}`);
 
     const user = await getUserById(id);
-    
+
     if (!user) {
       return res.status(404).json({
         error: 'Not found',
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 
     res.json({
       message: 'Successfully retrieved user',
-      user: user
+      user,
     });
   } catch (e) {
-    logger.error(`Error fetching user by ID:`, e);
+    logger.error('Error fetching user by ID:', e);
     next(e);
   }
 };
@@ -79,7 +87,7 @@ export const updateUserById = async (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({
         error: 'Unauthorized',
-        message: 'Authentication required'
+        message: 'Authentication required',
       });
     }
 
@@ -91,7 +99,7 @@ export const updateUserById = async (req, res, next) => {
     if (!isAdmin && !isOwnProfile) {
       return res.status(403).json({
         error: 'Forbidden',
-        message: 'You can only update your own profile'
+        message: 'You can only update your own profile',
       });
     }
 
@@ -99,7 +107,7 @@ export const updateUserById = async (req, res, next) => {
     if (updates.role && !isAdmin) {
       return res.status(403).json({
         error: 'Forbidden',
-        message: 'Only admins can change user roles'
+        message: 'Only admins can change user roles',
       });
     }
 
@@ -109,14 +117,14 @@ export const updateUserById = async (req, res, next) => {
 
     res.json({
       message: 'User updated successfully',
-      user: updatedUser
+      user: updatedUser,
     });
   } catch (e) {
-    logger.error(`Error updating user:`, e);
+    logger.error('Error updating user:', e);
     if (e.message === 'User not found') {
       return res.status(404).json({
         error: 'Not found',
-        message: 'User not found'
+        message: 'User not found',
       });
     }
     next(e);
@@ -139,7 +147,7 @@ export const deleteUserById = async (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({
         error: 'Unauthorized',
-        message: 'Authentication required'
+        message: 'Authentication required',
       });
     }
 
@@ -151,7 +159,7 @@ export const deleteUserById = async (req, res, next) => {
     if (!isAdmin && !isOwnProfile) {
       return res.status(403).json({
         error: 'Forbidden',
-        message: 'You can only delete your own profile'
+        message: 'You can only delete your own profile',
       });
     }
 
@@ -160,11 +168,11 @@ export const deleteUserById = async (req, res, next) => {
       // Check if there are other admins
       const allUsers = await getAllUsers();
       const adminCount = allUsers.filter(user => user.role === 'admin').length;
-      
+
       if (adminCount <= 1) {
         return res.status(409).json({
           error: 'Conflict',
-          message: 'Cannot delete the last admin account'
+          message: 'Cannot delete the last admin account',
         });
       }
     }
@@ -175,14 +183,14 @@ export const deleteUserById = async (req, res, next) => {
 
     res.json({
       message: 'User deleted successfully',
-      user: deletedUser
+      user: deletedUser,
     });
   } catch (e) {
-    logger.error(`Error deleting user:`, e);
+    logger.error('Error deleting user:', e);
     if (e.message === 'User not found') {
       return res.status(404).json({
         error: 'Not found',
-        message: 'User not found'
+        message: 'User not found',
       });
     }
     next(e);

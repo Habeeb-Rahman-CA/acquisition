@@ -8,12 +8,18 @@ services:
       dockerfile: Dockerfile
     container_name: acquisition-app-prod
     ports:
-      - "3000:3000"
+      - '3000:3000'
     env_file:
       - .env.production
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "node", "-e", "const http=require('http');const options={host:'localhost',port:3000,timeout:2000};const req=http.request(options,r=>{process.exit(r.statusCode===200?0:1)});req.on('error',()=>process.exit(1));req.end();"]
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "const http=require('http');const options={host:'localhost',port:3000,timeout:2000};const req=http.request(options,r=>{process.exit(r.statusCode===200?0:1)});req.on('error',()=>process.exit(1));req.end();",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
