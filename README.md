@@ -1,4 +1,4 @@
-# Acquisition - Dockerized Node.js Application with Neon Database
+# Acquisition - Dockerized Node.js Application with Neon Database 
 
 This application is configured to work with different database setups for development and production:
 
@@ -265,7 +265,7 @@ docker logs acquisition-app-dev --follow
 
 ## Support
 
-For issues related to:
+For issues related to: 
 
 - Neon Local: Check [Neon Documentation](https://neon.com/docs/local/neon-local)
 - Docker setup: Review the compose files and this documentation
