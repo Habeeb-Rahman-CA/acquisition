@@ -9,12 +9,12 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     env:
       NODE_ENV: test
       NODE_OPTIONS: --experimental-vm-modules
       DATABASE_URL: ${{ secrets.TEST_DATABASE_URL || 'postgresql://test:test@localhost:5432/test_db' }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -31,7 +31,10 @@ jobs:
       - name: Run tests
         id: test
         run: |
-          npm test -- --coverage --coverageReporters=json-summary --coverageReporters=lcov --coverageReporters=text
+          npm test -- --coverage \
+            --coverageReporters=json-summary \
+            --coverageReporters=lcov \
+            --coverageReporters=text
         continue-on-error: true
 
       - name: Upload coverage reports
@@ -39,8 +42,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-reports-${{ github.run_id }}
-          path: |
-            coverage/
+          path: coverage/
           retention-days: 30
 
       - name: Generate GitHub step summary
@@ -49,11 +51,10 @@ jobs:
           echo "## 📊 Test Results" >> $GITHUB_STEP_SUMMARY
           
           if [ -f coverage/coverage-summary.json ]; then
-            # Extract coverage data
-            LINES=$(cat coverage/coverage-summary.json | jq -r '.total.lines.pct')
-            FUNCTIONS=$(cat coverage/coverage-summary.json | jq -r '.total.functions.pct')
-            BRANCHES=$(cat coverage/coverage-summary.json | jq -r '.total.branches.pct')
-            STATEMENTS=$(cat coverage/coverage-summary.json | jq -r '.total.statements.pct')
+            LINES=$(jq -r '.total.lines.pct' coverage/coverage-summary.json)
+            FUNCTIONS=$(jq -r '.total.functions.pct' coverage/coverage-summary.json)
+            BRANCHES=$(jq -r '.total.branches.pct' coverage/coverage-summary.json)
+            STATEMENTS=$(jq -r '.total.statements.pct' coverage/coverage-summary.json)
             
             echo "### Coverage Summary" >> $GITHUB_STEP_SUMMARY
             echo "| Metric | Coverage |" >> $GITHUB_STEP_SUMMARY
@@ -64,18 +65,16 @@ jobs:
             echo "| Statements | ${STATEMENTS}% |" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             
-            # Determine overall status
             if (( $(echo "$LINES >= 80" | bc -l) )) && (( $(echo "$FUNCTIONS >= 80" | bc -l) )); then
               echo "✅ **Coverage Status**: Good coverage levels maintained!" >> $GITHUB_STEP_SUMMARY
             else
-              echo "⚠️ **Coverage Status**: Consider improving test coverage" >> $GITHUB_STEP_SUMMARY
+              echo "⚠️ **Coverage Status**: Consider improving test coverage." >> $GITHUB_STEP_SUMMARY
             fi
           else
-            echo "❌ **Test Status**: Tests failed to generate coverage report" >> $GITHUB_STEP_SUMMARY
+            echo "❌ **Test Status**: Tests failed to generate coverage report." >> $GITHUB_STEP_SUMMARY
           fi
           
-          # Add test result status
-          if [ ${{ steps.test.outcome }} = "success" ]; then
+          if [ "${{ steps.test.outcome }}" = "success" ]; then
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "✅ **All tests passed successfully!**" >> $GITHUB_STEP_SUMMARY
           else
@@ -89,18 +88,15 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            
-            // Create annotation for test failure
             core.error('Tests failed. Please check the test output above for details.');
-            
-            // If this is a PR, add a comment with helpful information
+
             if (context.eventName === 'pull_request') {
               github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body: `## ❌ Tests Failed
-                
+
 **Action Required**: Some tests are failing in this pull request.
 
 ### Next Steps:

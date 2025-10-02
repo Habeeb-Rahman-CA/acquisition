@@ -4,3 +4,4 @@ logs/
 drizzle/
 *.logs
 package-lock.json
+.github/workflows/
