@@ -24,7 +24,7 @@ export const fetchAllUsers = async (req, res, next) => {
     });
   } catch (e) {
     logger.error(e);
-    throw e;
+    next(e);
   }
 };
 

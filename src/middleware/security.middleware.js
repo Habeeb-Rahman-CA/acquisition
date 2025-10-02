@@ -62,9 +62,7 @@ export const securityMiddleware = async (req, res, next) => {
         userAgent: req.get('User-Agent'),
         path: req.path,
       });
-      return res
-        .status(403)
-        .json({ error: 'Forbidden', message: 'Too many request' });
+      return res.status(403).json({ error: 'Forbidden', message });
     }
     next();
   } catch (e) {
