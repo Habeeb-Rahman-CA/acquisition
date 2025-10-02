@@ -5,3 +5,4 @@ drizzle/
 *.logs
 package-lock.json
 .github/workflows/
+*.md
