@@ -265,7 +265,7 @@ docker logs acquisition-app-dev --follow
 
 ## Support
 
-For issues related to:
+For issues related to: 
 
 - Neon Local: Check [Neon Documentation](https://neon.com/docs/local/neon-local)
 - Docker setup: Review the compose files and this documentation
