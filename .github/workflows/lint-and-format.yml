@@ -1,0 +1,53 @@
+name: Lint and Format
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main, staging]
+
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: |
+          npm run lint
+          if [ $? -ne 0 ]; then
+            echo "::error::ESLint found issues. Run 'npm run lint:fix' to automatically fix some issues."
+            exit 1
+          fi
+
+      - name: Check Prettier formatting
+        run: |
+          npm run format:check
+          if [ $? -ne 0 ]; then
+            echo "::error::Code formatting issues found. Run 'npm run format' to fix formatting."
+            exit 1
+          fi
+
+      - name: Annotate PR with linting suggestions
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: '🔧 **Linting/Formatting Issues Found**\n\nPlease run the following commands to fix the issues:\n- `npm run lint:fix` to automatically fix ESLint issues\n- `npm run format` to format your code with Prettier',
+              event: 'REQUEST_CHANGES'
+            });
