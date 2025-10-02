@@ -1,4 +1,4 @@
-# Acquisition - Dockerized Node.js Application with Neon Database
+# Acquisition - Dockerized Node.js Application with Neon Database 
 
 This application is configured to work with different database setups for development and production:
 
