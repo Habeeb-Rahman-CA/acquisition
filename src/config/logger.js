@@ -9,8 +9,8 @@ const logger = winston.createLogger({
   ),
   defaultMeta: { service: 'acquisition-api' },
   transports: [
-    new winston.transports.File({ filename: 'logs/error.lg', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/combined.lg' }),
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/combined.log' }),
   ],
 });
 
